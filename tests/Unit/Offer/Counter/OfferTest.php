@@ -10,7 +10,7 @@ class OfferTest extends TestCase
     {
         // Set
         $attributes = [
-            'id' => 1,
+            'offerId' => 1,
             'productTitle' => 'Lorem Ipsum',
             'vendorId' => 35,
             'price' => 19.99,
@@ -24,7 +24,7 @@ class OfferTest extends TestCase
         $price = $offer->getPrice();
 
         // Assertions
-        $this->assertSame($attributes['id'], $id);
+        $this->assertSame($attributes['offerId'], $id);
         $this->assertSame($attributes['productTitle'], $productTitle);
         $this->assertSame($attributes['vendorId'], $vendorId);
         $this->assertSame($attributes['price'], $price);

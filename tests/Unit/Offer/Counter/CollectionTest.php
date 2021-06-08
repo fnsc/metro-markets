@@ -68,7 +68,7 @@ class CollectionTest extends TestCase
     {
         // Set
         $attributes = [
-            'id' => 1,
+            'offerId' => 1,
             'productTitle' => 'Lorem',
             'vendorId' => 23,
             'price' => 12.99
@@ -90,7 +90,7 @@ class CollectionTest extends TestCase
     {
         // Set
         $attributes = [
-            'id' => 1,
+            'offerId' => 1,
             'productTitle' => 'Lorem',
             'vendorId' => 23,
             'price' => 12.99

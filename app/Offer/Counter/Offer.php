@@ -11,7 +11,7 @@ class Offer implements OfferInterface
 
     public function __construct(array $offer)
     {
-        $this->id = $offer['id'];
+        $this->id = $offer['offerId'];
         $this->productTitle = $offer['productTitle'];
         $this->vendorId = $offer['vendorId'];
         $this->price = $offer['price'];
