@@ -54,7 +54,8 @@ class Collection implements OfferCollectionInterface
 
     private function isBetweenPriceRange(OfferInterface $offer, float $lowerPrice, float $higherPrice): bool
     {
-        return $offer->getPrice() >= $lowerPrice && $offer->getPrice() <= $higherPrice;
+        $price = $offer->getPrice();
+        return $price >= $lowerPrice && $price <= $higherPrice;
     }
 
     private function belongsTo(int $vendorId, OfferInterface $offer): bool
