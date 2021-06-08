@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Collections;
 
+use App\Models\OfferInterface;
+use App\Services\OfferIterator;
 use Iterator;
 
-class Collection implements OfferCollectionInterface
+class OfferCollection implements OfferCollectionInterface
 {
     private OfferIterator $offers;
 
@@ -23,7 +25,7 @@ class Collection implements OfferCollectionInterface
         return $this->offers;
     }
 
-    public function add(Offer $offer): void
+    public function add(OfferInterface $offer): void
     {
         $this->offers->add($offer);
     }

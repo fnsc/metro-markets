@@ -1,22 +1,19 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Services;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Log;
 
 class ApiFetcher
 {
     private const URI = 'http://localhost';
     private Client $client;
-    private LoggerInterface $logger;
 
-    public function __construct(Client $client, LoggerInterface $logger)
+    public function __construct(Client $client)
     {
-        $this->client = $client;
-        $this->logger = $logger;
+        $this->client = $client;;
     }
 
     public function fetch(): string
@@ -26,11 +23,10 @@ class ApiFetcher
 
             return $response->getBody()->getContents();
         } catch (Exception $exception) {
-            $this->logger->error('Api endpoint is not working',
+            Log::error('Api endpoint is not working',
                 [
                     'exception' => $exception,
-                ]
-            );
+                ]);
 
             return json_encode([
                 'message' => 'Failed',

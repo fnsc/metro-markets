@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Models;
 
 interface OfferInterface
 {

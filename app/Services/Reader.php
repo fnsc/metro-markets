@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Services;
+
+use App\Collections\{OfferCollection, OfferCollectionInterface};
+use App\Models\Offer;
 
 class Reader implements ReaderInterface
 {
@@ -16,6 +19,6 @@ class Reader implements ReaderInterface
             $offer[] = new Offer($offer);
         }
 
-        return new Collection($offers);
+        return new OfferCollection($offers);
     }
 }
