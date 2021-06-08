@@ -30,28 +30,26 @@ class Collection implements OfferCollectionInterface
 
     public function getOffersByRange(float $lowerPrice, float $higherPrice): int
     {
-        $counter = [];
+        $counter = 0;
         foreach ($this->offers as $offer) {
-            if (!$this->isBetweenPriceRange($offer, $lowerPrice, $higherPrice)) {
-                continue;
+            if ($this->isBetweenPriceRange($offer, $lowerPrice, $higherPrice)) {
+                $counter++;
             }
-            $counter[] = $offer;
         }
 
-        return count($counter);
+        return $counter;
     }
 
     public function getOffersByVendorId(int $vendorId): int
     {
-        $counter = [];
+        $counter = 0;
         foreach ($this->offers as $offer) {
-            if (!$this->belongsTo($vendorId, $offer)) {
-                continue;
+            if ($this->belongsTo($vendorId, $offer)) {
+                $counter++;
             }
-            $counter[] = $offer;
         }
 
-        return count($counter);
+        return $counter;
     }
 
     private function isBetweenPriceRange(OfferInterface $offer, float $lowerPrice, float $higherPrice): bool
