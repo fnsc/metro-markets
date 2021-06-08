@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Offer\Counter\Vendor;
+namespace App\Offer\Counter\Range;
 
 use App\Offer\Counter\ApiFetcher;
 use App\Offer\Counter\Collection;
 use App\Offer\Counter\Offer;
 use App\Offer\Counter\Reader;
 use Mockery;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ServiceTest extends TestCase
 {
-    public function testShouldReturnNumberOfOffersByVendorId(): void
+    public function testShouldReturnNmberOfOffersByPriceRange(): void
     {
         // Set
         $fetcher = Mockery::mock(ApiFetcher::class);
@@ -48,11 +48,11 @@ class ServiceTest extends TestCase
             ->andReturn($collection);
 
         $collection->expects()
-            ->getOffersByVendorId(35)
+            ->getOffersByRange(15.0, 16.99)
             ->andReturn(1);
 
         // Actions
-        $result = $service->handle(35);
+        $result = $service->handle(15.0, 16.99);
 
         // Assertions
         $this->assertSame(1, $result);
@@ -75,7 +75,7 @@ class ServiceTest extends TestCase
             ->andReturn(json_encode($contents));
 
         // Actions
-        $result = $service->handle(35);
+        $result = $service->handle(15.0, 16.99);
 
         // Assertions
         $this->assertSame(0, $result);
