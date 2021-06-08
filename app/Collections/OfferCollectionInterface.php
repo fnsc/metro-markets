@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Collections;
 
+use App\Models\OfferInterface;
 use Iterator;
 
 interface OfferCollectionInterface

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Collections;
 
+use App\Models\OfferInterface;
+use App\Services\OfferIterator;
 use Iterator;
 
-class Collection implements OfferCollectionInterface
+class OfferCollection implements OfferCollectionInterface
 {
     private OfferIterator $offers;
 
@@ -23,40 +25,39 @@ class Collection implements OfferCollectionInterface
         return $this->offers;
     }
 
-    public function add(Offer $offer): void
+    public function add(OfferInterface $offer): void
     {
         $this->offers->add($offer);
     }
 
     public function getOffersByRange(float $lowerPrice, float $higherPrice): int
     {
-        $counter = [];
+        $counter = 0;
         foreach ($this->offers as $offer) {
-            if (!$this->isBetweenPriceRange($offer, $lowerPrice, $higherPrice)) {
-                continue;
+            if ($this->isBetweenPriceRange($offer, $lowerPrice, $higherPrice)) {
+                $counter++;
             }
-            $counter[] = $offer;
         }
 
-        return count($counter);
+        return $counter;
     }
 
     public function getOffersByVendorId(int $vendorId): int
     {
-        $counter = [];
+        $counter = 0;
         foreach ($this->offers as $offer) {
-            if (!$this->belongsTo($vendorId, $offer)) {
-                continue;
+            if ($this->belongsTo($vendorId, $offer)) {
+                $counter++;
             }
-            $counter[] = $offer;
         }
 
-        return count($counter);
+        return $counter;
     }
 
     private function isBetweenPriceRange(OfferInterface $offer, float $lowerPrice, float $higherPrice): bool
     {
-        return $offer->getPrice() >= $lowerPrice && $offer->getPrice() <= $higherPrice;
+        $price = $offer->getPrice();
+        return $price >= $lowerPrice && $price <= $higherPrice;
     }
 
     private function belongsTo(int $vendorId, OfferInterface $offer): bool

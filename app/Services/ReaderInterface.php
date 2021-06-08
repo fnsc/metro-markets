@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Services;
+
+use App\Collections\OfferCollectionInterface;
 
 interface ReaderInterface
 {

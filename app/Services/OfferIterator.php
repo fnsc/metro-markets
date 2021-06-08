@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Offer\Counter;
+namespace App\Services;
 
+use App\Models\OfferInterface;
 use Iterator;
 
 class OfferIterator implements Iterator
@@ -42,7 +43,7 @@ class OfferIterator implements Iterator
         $this->current = 0;
     }
 
-    public function add(Offer $offer): void
+    public function add(OfferInterface $offer): void
     {
         $this->offers[] = $offer;
     }
