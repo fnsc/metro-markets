@@ -27,8 +27,10 @@ class ReaderTest extends TestCase
 
         // Actions
         $result = $reader->read($offers);
+        $counter = count($result->getIterator()->toArray());
 
         // Assertions
         $this->assertInstanceOf(Collection::class, $result);
+        $this->assertSame(2, $counter);
     }
 }

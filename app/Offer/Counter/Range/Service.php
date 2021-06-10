@@ -3,6 +3,8 @@
 namespace App\Offer\Counter\Range;
 
 use App\Offer\Counter\ApiFetcher;
+use App\Offer\Counter\OfferCollectionInterface;
+use App\Offer\Counter\OfferInterface;
 use App\Offer\Counter\Reader;
 
 class Service
@@ -27,6 +29,25 @@ class Service
 
         $collection = $this->reader->read($result['data']);
 
-        return $collection->getOffersByRange($lowerPrice, $higherPrice);
+        return $this->getOffersByRange($collection, $lowerPrice, $higherPrice);
+    }
+
+    private function getOffersByRange(OfferCollectionInterface $collection, float $lowerPrice, float $higherPrice): int
+    {
+        $counter = 0;
+        $offers = $collection->getIterator();
+        foreach ($offers as $offer) {
+            if (!$this->isBetweenPriceRange($offer, $lowerPrice, $higherPrice)) {
+                continue;
+            }
+            $counter++;
+        }
+
+        return $counter;
+    }
+
+    private function isBetweenPriceRange(OfferInterface $offer, float $lowerPrice, float $higherPrice): bool
+    {
+        return $offer->getPrice() >= $lowerPrice && $offer->getPrice() <= $higherPrice;
     }
 }

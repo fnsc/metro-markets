@@ -11,14 +11,32 @@ use Tests\TestCase;
 
 class ServiceTest extends TestCase
 {
-    public function testShouldReturnNmberOfOffersByPriceRange(): void
+    /**
+     * @dataProvider getPriceRangeScenarios
+     */
+    public function testShouldReturnNumberOfOffersByPriceRange(float $lowerPrice, float $higherPrice, int $expected): void
     {
         // Set
         $fetcher = Mockery::mock(ApiFetcher::class);
         $reader = Mockery::mock(Reader::class);
-        $offer = Mockery::mock(Offer::class);
-        $offers = [$offer, $offer];
-        $collection = Mockery::mock(Collection::class, [$offers]);
+        $offer1 = Mockery::mock(Offer::class, [
+            [
+                "offerId" => 123,
+                "productTitle" => "Coffee machine",
+                "vendorId" => 35,
+                "price" => 390.4
+            ]
+        ])->makePartial();
+        $offer2 = Mockery::mock(Offer::class, [
+            [
+                "offerId" => 124,
+                "productTitle" => "Napkins",
+                "vendorId" => 35,
+                "price" => 15.5
+            ]
+        ])->makePartial();
+        $offers = [$offer1, $offer2];
+        $collection = Mockery::mock(Collection::class, [$offers])->makePartial();
         $service = new Service($fetcher, $reader);
         $contents = [
             'message' => 'Success',
@@ -47,15 +65,11 @@ class ServiceTest extends TestCase
             ->read($contents['data'])
             ->andReturn($collection);
 
-        $collection->expects()
-            ->getOffersByRange(15.0, 16.99)
-            ->andReturn(1);
-
         // Actions
-        $result = $service->handle(15.0, 16.99);
+        $result = $service->handle($lowerPrice, $higherPrice);
 
         // Assertions
-        $this->assertSame(1, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testShouldReturnZeroIfApiIsNotWorking(): void
@@ -79,5 +93,21 @@ class ServiceTest extends TestCase
 
         // Assertions
         $this->assertSame(0, $result);
+    }
+
+    public function getPriceRangeScenarios(): array
+    {
+        return [
+            'between price range' => [
+                'lowerPrice' => 10.99,
+                'higherPrice' => 15.99,
+                'expected' => 1,
+            ],
+            'not between price range' =>[
+                'lowerPrice' => 10.99,
+                'higherPrice' => 12.98,
+                'expected' => 0,
+            ],
+        ];
     }
 }

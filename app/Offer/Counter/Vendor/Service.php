@@ -3,6 +3,8 @@
 namespace App\Offer\Counter\Vendor;
 
 use App\Offer\Counter\ApiFetcher;
+use App\Offer\Counter\OfferCollectionInterface;
+use App\Offer\Counter\OfferInterface;
 use App\Offer\Counter\Reader;
 
 class Service
@@ -27,6 +29,25 @@ class Service
 
         $collection = $this->reader->read($result['data']);
 
-        return $collection->getOffersByVendorId($vendorId);
+        return $this->getOffersByVendorId($collection, $vendorId);
+    }
+
+    public function getOffersByVendorId(OfferCollectionInterface $collection, int $vendorId): int
+    {
+        $counter = [];
+        $offers = $collection->getIterator();
+        foreach ($offers as $offer) {
+            if (!$this->belongsTo($vendorId, $offer)) {
+                continue;
+            }
+            $counter[] = $offer;
+        }
+
+        return count($counter);
+    }
+
+    private function belongsTo(int $vendorId, OfferInterface $offer): bool
+    {
+        return $offer->getVendorId() === $vendorId;
     }
 }

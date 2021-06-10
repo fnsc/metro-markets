@@ -11,14 +11,32 @@ use PHPUnit\Framework\TestCase;
 
 class ServiceTest extends TestCase
 {
-    public function testShouldReturnNumberOfOffersByVendorId(): void
+    /**
+     * @dataProvider getVendorIdScenarios
+     */
+    public function testShouldReturnNumberOfOffersByVendorId(int $vendorId, int $expected): void
     {
         // Set
         $fetcher = Mockery::mock(ApiFetcher::class);
         $reader = Mockery::mock(Reader::class);
-        $offer = Mockery::mock(Offer::class);
-        $offers = [$offer, $offer];
-        $collection = Mockery::mock(Collection::class, [$offers]);
+        $offer1 = Mockery::mock(Offer::class, [
+            [
+                "offerId" => 123,
+                "productTitle" => "Coffee machine",
+                "vendorId" => 35,
+                "price" => 390.4
+            ]
+        ])->makePartial();
+        $offer2 = Mockery::mock(Offer::class, [
+            [
+                "offerId" => 124,
+                "productTitle" => "Napkins",
+                "vendorId" => 15,
+                "price" => 15.5
+            ]
+        ])->makePartial();
+        $offers = [$offer1, $offer2];
+        $collection = Mockery::mock(Collection::class, [$offers])->makePartial();
         $service = new Service($fetcher, $reader);
         $contents = [
             'message' => 'Success',
@@ -32,7 +50,7 @@ class ServiceTest extends TestCase
                 [
                     "offerId" => 124,
                     "productTitle" => "Napkins",
-                    "vendorId" => 35,
+                    "vendorId" => 15,
                     "price" => 15.5
                 ],
             ],
@@ -47,15 +65,11 @@ class ServiceTest extends TestCase
             ->read($contents['data'])
             ->andReturn($collection);
 
-        $collection->expects()
-            ->getOffersByVendorId(35)
-            ->andReturn(1);
-
         // Actions
-        $result = $service->handle(35);
+        $result = $service->handle($vendorId);
 
         // Assertions
-        $this->assertSame(1, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testShouldReturnZeroIfApiIsNotWorking(): void
@@ -79,5 +93,19 @@ class ServiceTest extends TestCase
 
         // Assertions
         $this->assertSame(0, $result);
+    }
+
+    public function getVendorIdScenarios(): array
+    {
+        return [
+            'belongs to vendor id' => [
+                'vendorId' => 35,
+                'expected' => 1,
+            ],
+            'do not belong to vendor id' =>[
+                'vendorId' => 25,
+                'expected' => 0,
+            ],
+        ];
     }
 }

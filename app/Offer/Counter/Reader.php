@@ -13,7 +13,7 @@ class Reader implements ReaderInterface
     {
         $offers = [];
         foreach ($data as $offer) {
-            $offer[] = new Offer($offer);
+            $offers[] = new Offer($offer);
         }
 
         return new Collection($offers);
